@@ -17,6 +17,7 @@ import {
   Twitter,
   Youtube,
 } from "lucide-react";
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 interface ContentConfig {
   format: string;
@@ -54,6 +55,7 @@ const CHANNELS = [
 ];
 
 export default function ContentGenerator() {
+  usePageTitle('Content Generator');
   const navigate = useNavigate();
   const { trendId } = useParams();
 

@@ -15,6 +15,7 @@ import { RelatedTrends } from "@/components/trends/RelatedTrends";
 import { TrendNews } from "@/components/trends/TrendNews";
 import { TrendInsights } from "@/components/trends/TrendInsights";
 import { TrendAnalyticsDashboard } from "@/components/trends/analytics/TrendAnalyticsDashboard";
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 export default function TrendDetails() {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ export default function TrendDetails() {
       return trendData;
     },
   });
+
+  usePageTitle(trend ? trend.name : 'Trend Analysis');
 
   if (isLoading) {
     return (
