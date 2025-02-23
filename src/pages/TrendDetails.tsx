@@ -51,12 +51,9 @@ export default function TrendDetails() {
   };
 
   const prepareTrendData = () => {
-    // Get the last 7 days of data
     const currentWeekData = trend.data.slice(-7);
-    // Get the previous 7 days of data
     const previousWeekData = trend.data.slice(-14, -7);
 
-    // Create array of data points with both current and previous week values
     return currentWeekData.map((item, index) => ({
       date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       currentWeek: item.score,
@@ -82,28 +79,21 @@ export default function TrendDetails() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white">
       <div className="container py-8 space-y-8">
-        <div className="space-y-6">
+        <div className="flex items-center justify-between">
           <Button
             variant="ghost"
-            className="gap-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 -ml-2"
-            onClick={() => navigate('/')}
+            onClick={() => navigate(-1)}
+            className="gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Trends
+            Back
           </Button>
-          
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
-                {trend.name}
-              </h1>
-              <p className="text-muted-foreground">{trend.description}</p>
-            </div>
-            <DateRangePicker 
-              dateRange={dateRange}
-              onDateRangeChange={setDateRange}
-            />
-          </div>
+          <Button
+            onClick={() => navigate(`/trends/${trend.id}/generate`)}
+            className="bg-accent hover:bg-accent/90"
+          >
+            Generate Content
+          </Button>
         </div>
 
         <Card className="overflow-hidden border-purple-100">
