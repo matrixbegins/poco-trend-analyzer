@@ -13,6 +13,7 @@ import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 import { findTrendById } from "@/data/trendData";
 import { useQuery } from "@tanstack/react-query";
+import { DateRange } from "react-day-picker";
 
 export default function TrendDetails() {
   const { trendId } = useParams();
