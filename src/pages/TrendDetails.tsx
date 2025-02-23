@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,13 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, PieChart, Pie, Cell } from "recharts";
 import { findTrendById } from "@/data/trendData";
 import { useQuery } from "@tanstack/react-query";
 import { DateRange } from "react-day-picker";
-import { ExternalLink, Star, ArrowLeft } from "lucide-react";
+import { ExternalLink, Star, ArrowLeft, TrendingUp, TrendingDown } from "lucide-react";
 
 const COLORS = ['#10B981', '#EF4444', '#6B7280'];
 
@@ -56,11 +55,18 @@ export default function TrendDetails() {
     );
   }
 
-  // Get previous week's data
+  // Get previous week's data and calculate trends
   const prevWeekData = trend.data.slice(0, 7).map(item => ({
     ...item,
-    score: item.score * 0.8 // Simulating previous week's data
+    score: item.score * 0.8
   }));
+
+  const currentTotal = trend.data.reduce((sum, item) => sum + item.score, 0);
+  const previousTotal = prevWeekData.reduce((sum, item) => sum + item.score, 0);
+  const percentageChange = ((currentTotal - previousTotal) / previousTotal) * 100;
+
+  // Sort sources by mentions in descending order
+  const sortedSources = [...(trend.sources || [])].sort((a, b) => b.mentions - a.mentions);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white">
@@ -89,10 +95,30 @@ export default function TrendDetails() {
           </div>
         </div>
 
-        {/* Popularity Section */}
+        {/* Popularity Summary */}
         <Card className="overflow-hidden border-purple-100">
-          <CardHeader className="bg-gradient-to-r from-purple-50 to-transparent">
-            <CardTitle>Popularity Trend</CardTitle>
+          <CardHeader className="pb-0">
+            <CardTitle className="text-xl leading-tight">Popularity Trend</CardTitle>
+            <Separator className="my-3" />
+            <div className="grid grid-cols-2 gap-8 py-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Total Engagement</p>
+                <p className="text-2xl font-semibold">{currentTotal.toLocaleString()}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Week over Week Change</p>
+                <div className="flex items-center gap-2">
+                  {percentageChange > 0 ? (
+                    <TrendingUp className="h-5 w-5 text-green-500" />
+                  ) : (
+                    <TrendingDown className="h-5 w-5 text-red-500" />
+                  )}
+                  <p className={`text-2xl font-semibold ${percentageChange > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    {Math.abs(percentageChange).toFixed(1)}%
+                  </p>
+                </div>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="h-[300px] w-full">
@@ -128,8 +154,9 @@ export default function TrendDetails() {
 
         {/* Sentiment Section */}
         <Card className="overflow-hidden border-purple-100">
-          <CardHeader className="bg-gradient-to-r from-purple-50 to-transparent">
-            <CardTitle>Customer Response/Sentiments</CardTitle>
+          <CardHeader className="pb-0">
+            <CardTitle className="text-xl leading-tight">Customer Response/Sentiments</CardTitle>
+            <Separator className="my-3" />
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -175,13 +202,14 @@ export default function TrendDetails() {
 
         {/* Sources Section */}
         <Card className="overflow-hidden border-purple-100">
-          <CardHeader className="bg-gradient-to-r from-purple-50 to-transparent">
-            <CardTitle>Top Sources</CardTitle>
+          <CardHeader className="pb-0">
+            <CardTitle className="text-xl leading-tight">Top Sources</CardTitle>
+            <Separator className="my-3" />
           </CardHeader>
           <CardContent>
-            {trend.sources && (
+            {sortedSources && (
               <div className="space-y-3">
-                {trend.sources.map((source, index) => (
+                {sortedSources.map((source, index) => (
                   <div key={source.name} className="flex items-center gap-4">
                     <span className="text-sm font-medium w-8">{index + 1}.</span>
                     <span className="flex-1">{source.name}</span>
@@ -190,7 +218,7 @@ export default function TrendDetails() {
                         <div 
                           className="absolute top-0 left-0 h-full bg-purple-500 rounded-full"
                           style={{ 
-                            width: `${(source.mentions / Math.max(...trend.sources.map(s => s.mentions))) * 100}%`
+                            width: `${(source.mentions / Math.max(...sortedSources.map(s => s.mentions))) * 100}%`
                           }}
                         />
                       </div>
