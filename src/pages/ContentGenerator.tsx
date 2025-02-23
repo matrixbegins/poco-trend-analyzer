@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -8,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { findTrendById } from "@/data/trendData";
+import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Gauge } from "lucide-react";
 import {
   Facebook,
@@ -56,8 +56,18 @@ const CHANNELS = [
 export default function ContentGenerator() {
   const navigate = useNavigate();
   const { trendId } = useParams();
-  const trend = findTrendById(trendId || "");
-  
+
+  const { data: trend, isLoading, isError } = useQuery({
+    queryKey: ['trend', trendId],
+    queryFn: () => {
+      const trendData = findTrendById(trendId || '');
+      if (!trendData) {
+        throw new Error('Trend not found');
+      }
+      return trendData;
+    },
+  });
+
   const [config, setConfig] = useState<ContentConfig>({
     format: CONTENT_FORMATS[0],
     tonality: TONALITIES[0],
@@ -69,6 +79,35 @@ export default function ContentGenerator() {
   const [hasGenerated, setHasGenerated] = useState(false);
   const [viralityScore] = useState(85);
   const [bestTime] = useState("Tuesday at 10:00 AM EST");
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white flex items-center justify-center">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
+  }
+
+  if (isError || !trend) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white p-8">
+        <div className="container mx-auto text-center">
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/')}
+            className="gap-2 mb-8"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Homepage
+          </Button>
+          <h1 className="text-2xl font-semibold mb-4">Trend Not Found</h1>
+          <p className="text-muted-foreground">
+            The trend you're looking for doesn't exist or has been removed.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const handleGenerate = () => {
     setGeneratedContent(
@@ -84,14 +123,9 @@ export default function ContentGenerator() {
     }));
   };
 
-  if (!trend) {
-    return <div>Trend not found</div>;
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white p-8">
       <div className="container mx-auto">
-        {/* Header with back button */}
         <div className="mb-6">
           <Button
             variant="ghost"
@@ -105,14 +139,12 @@ export default function ContentGenerator() {
 
         <h1 className="text-2xl font-semibold mb-6">Generate Content for {trend.name}</h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Side - Configuration */}
           <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Content Configuration</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Content Format */}
                 <div className="space-y-3">
                   <Label>Content Format</Label>
                   <RadioGroup
@@ -133,7 +165,6 @@ export default function ContentGenerator() {
 
                 <Separator />
 
-                {/* Tonality */}
                 <div className="space-y-3">
                   <Label>Tonality</Label>
                   <RadioGroup
@@ -154,7 +185,6 @@ export default function ContentGenerator() {
 
                 <Separator />
 
-                {/* Target Channel */}
                 <div className="space-y-3">
                   <Label>Target Channel</Label>
                   <RadioGroup
@@ -181,7 +211,6 @@ export default function ContentGenerator() {
 
                 <Separator />
 
-                {/* User Prompt */}
                 <div className="space-y-3">
                   <Label>User Prompt</Label>
                   <Textarea
@@ -211,10 +240,8 @@ export default function ContentGenerator() {
             </Card>
           </div>
 
-          {/* Right Side - Output */}
           {hasGenerated ? (
             <div className="space-y-6">
-              {/* Generated Content */}
               <Card>
                 <CardHeader>
                   <CardTitle>Generated Content</CardTitle>
@@ -229,9 +256,7 @@ export default function ContentGenerator() {
                 </CardContent>
               </Card>
 
-              {/* Metrics */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Virality Score */}
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-lg">Virality Score</CardTitle>
@@ -249,7 +274,6 @@ export default function ContentGenerator() {
                   </CardContent>
                 </Card>
 
-                {/* Best Time to Post */}
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-lg">Best Time to Post</CardTitle>
@@ -263,7 +287,6 @@ export default function ContentGenerator() {
                 </Card>
               </div>
 
-              {/* Recommended Channels */}
               <Card>
                 <CardHeader>
                   <CardTitle>Recommended Channels</CardTitle>
