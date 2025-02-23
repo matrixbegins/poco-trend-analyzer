@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,11 +14,12 @@ import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, PieChart, 
 import { findTrendById } from "@/data/trendData";
 import { useQuery } from "@tanstack/react-query";
 import { DateRange } from "react-day-picker";
-import { ExternalLink, Star } from "lucide-react";
+import { ExternalLink, Star, ArrowLeft } from "lucide-react";
 
 const COLORS = ['#10B981', '#EF4444', '#6B7280'];
 
 export default function TrendDetails() {
+  const navigate = useNavigate();
   const { trendId } = useParams();
   const [dateRange, setDateRange] = useState<DateRange>({
     from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
@@ -64,17 +65,28 @@ export default function TrendDetails() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white">
       <div className="container py-8 space-y-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
-              {trend.name}
-            </h1>
-            <p className="text-muted-foreground">{trend.description}</p>
+        <div className="space-y-6">
+          <Button
+            variant="ghost"
+            className="gap-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 -ml-2"
+            onClick={() => navigate('/')}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Trends
+          </Button>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
+                {trend.name}
+              </h1>
+              <p className="text-muted-foreground">{trend.description}</p>
+            </div>
+            <DateRangePicker 
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
+            />
           </div>
-          <DateRangePicker 
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-          />
         </div>
 
         {/* Popularity Section */}
