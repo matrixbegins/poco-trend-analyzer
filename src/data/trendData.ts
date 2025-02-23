@@ -1,4 +1,3 @@
-
 export interface Trend {
   id: string;
   name: string;
@@ -103,50 +102,95 @@ const generateTrend = (name: string, category: string): Trend => {
   };
 };
 
-// Generate sample data for each category
+// Generate sample data for the food industry category
 export const industryTrends: TrendCategory = {
-  id: 'industry',
-  name: 'Industry Trends',
-  description: 'Top trending topics in your specific industry sector',
-  trends: Array.from({ length: 10 }, (_, i) => 
-    generateTrend(`Industry Trend ${i + 1}`, 'Industry')
-  ),
+  id: 'food-industry',
+  name: 'Food Industry Trends',
+  description: 'Leading trends shaping the future of food and beverage',
+  trends: [
+    generateTrend('Plant-Based Innovation', 'Food Industry'),
+    generateTrend('Food Waste Reduction', 'Food Industry'),
+    generateTrend('Cloud Kitchens', 'Food Industry'),
+    generateTrend('Sustainable Packaging', 'Food Industry'),
+    generateTrend('Alternative Proteins', 'Food Industry'),
+    generateTrend('Smart Kitchen Tech', 'Food Industry'),
+    generateTrend('Functional Foods', 'Food Industry'),
+    generateTrend('Local Sourcing', 'Food Industry'),
+    generateTrend('Personalized Nutrition', 'Food Industry'),
+    generateTrend('Zero-Alcohol Beverages', 'Food Industry'),
+  ],
 };
 
 export const geographyTrends: TrendCategory = {
   id: 'geography',
-  name: 'Geography Trends',
-  description: 'Popular trends in your geographic region',
-  trends: Array.from({ length: 10 }, (_, i) =>
-    generateTrend(`Geographic Trend ${i + 1}`, 'Geography')
-  ),
+  name: 'Regional Food Trends',
+  description: 'Popular food trends in your geographic region',
+  trends: [
+    generateTrend('Korean Street Food', 'Geography'),
+    generateTrend('Mediterranean Diet', 'Geography'),
+    generateTrend('Nordic Cuisine', 'Geography'),
+    generateTrend('Latin American Fusion', 'Geography'),
+    generateTrend('Indian Street Food', 'Geography'),
+    generateTrend('Japanese Comfort Food', 'Geography'),
+    generateTrend('Middle Eastern Flavors', 'Geography'),
+    generateTrend('Southeast Asian Desserts', 'Geography'),
+    generateTrend('African Superfoods', 'Geography'),
+    generateTrend('European Pastries', 'Geography'),
+  ],
 };
 
 export const competitorTrends: TrendCategory = {
   id: 'competitors',
   name: 'Competitor Trends',
-  description: 'Track what your competitors are focusing on',
-  trends: Array.from({ length: 10 }, (_, i) =>
-    generateTrend(`Competitor Trend ${i + 1}`, 'Competitors')
-  ),
+  description: 'Track what leading food companies are focusing on',
+  trends: [
+    generateTrend('Direct-to-Consumer Models', 'Competitors'),
+    generateTrend('Ghost Kitchen Expansion', 'Competitors'),
+    generateTrend('Subscription Meal Kits', 'Competitors'),
+    generateTrend('AI-Powered Menu Planning', 'Competitors'),
+    generateTrend('Vertical Farming Investment', 'Competitors'),
+    generateTrend('Food Delivery Innovation', 'Competitors'),
+    generateTrend('Blockchain Traceability', 'Competitors'),
+    generateTrend('Lab-Grown Alternatives', 'Competitors'),
+    generateTrend('Smart Vending Solutions', 'Competitors'),
+    generateTrend('Eco-Friendly Packaging', 'Competitors'),
+  ],
 };
 
 export const followedTrends: TrendCategory = {
   id: 'followed',
   name: 'Followed Trends',
-  description: 'Stay updated with your favorite trends',
-  trends: Array.from({ length: 10 }, (_, i) =>
-    generateTrend(`Followed Trend ${i + 1}`, 'Followed')
-  ),
+  description: 'Your curated list of food industry trends',
+  trends: [
+    generateTrend('Food Tech Innovation', 'Followed'),
+    generateTrend('Restaurant Automation', 'Followed'),
+    generateTrend('Digital Menu Optimization', 'Followed'),
+    generateTrend('Food Safety Tech', 'Followed'),
+    generateTrend('Consumer Analytics', 'Followed'),
+    generateTrend('Loyalty Programs 2.0', 'Followed'),
+    generateTrend('Voice Ordering Systems', 'Followed'),
+    generateTrend('Contactless Dining', 'Followed'),
+    generateTrend('Augmented Reality Menus', 'Followed'),
+    generateTrend('Robotic Food Prep', 'Followed'),
+  ],
 };
 
 export const generalTrends: TrendCategory = {
   id: 'general',
-  name: 'General Trends',
-  description: 'Overall trending topics across all categories',
-  trends: Array.from({ length: 10 }, (_, i) =>
-    generateTrend(`General Trend ${i + 1}`, 'General')
-  ),
+  name: 'General Food Trends',
+  description: 'Overall trending topics in food and beverage',
+  trends: [
+    generateTrend('Health & Wellness Foods', 'General'),
+    generateTrend('Meal Kit Delivery', 'General'),
+    generateTrend('Food Tourism', 'General'),
+    generateTrend('Social Media Food', 'General'),
+    generateTrend('Food Photography', 'General'),
+    generateTrend('Home Cooking', 'General'),
+    generateTrend('Food Influencers', 'General'),
+    generateTrend('Cooking Classes', 'General'),
+    generateTrend('Food Festivals', 'General'),
+    generateTrend('Farm-to-Table', 'General'),
+  ],
 };
 
 export const allTrendCategories = [
