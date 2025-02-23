@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,30 @@ import { Separator } from "@/components/ui/separator";
 import { findTrendById } from "@/data/trendData";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, TrendingUp, TrendingDown, ExternalLink, Star } from "lucide-react";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+
+// Constants for the pie chart
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+// Utility function to prepare sentiment data
+const prepareSentimentData = (sentiment: any) => {
+  if (!sentiment) return [];
+  return Object.entries(sentiment).map(([name, value]) => ({
+    name,
+    value: Number(value),
+  }));
+};
 
 export default function TrendDetails() {
   const navigate = useNavigate();
@@ -76,6 +101,7 @@ export default function TrendDetails() {
           </Button>
         </div>
 
+        {/* Trend Data Cards */}
         <Card className="overflow-hidden border-purple-100">
           <CardHeader className="pb-0">
             <CardTitle className="text-xl leading-tight">Popularity Trend</CardTitle>
@@ -117,21 +143,12 @@ export default function TrendDetails() {
                   <Legend />
                   <Line
                     type="monotone"
-                    dataKey="currentWeek"
+                    dataKey="score"
                     stroke="#9b87f5"
                     strokeWidth={2}
                     dot={{ fill: '#9b87f5', r: 4 }}
                     activeDot={{ r: 6 }}
                     name="Current Week"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="previousWeek"
-                    stroke="#e2e8f0"
-                    strokeWidth={2}
-                    dot={{ fill: '#e2e8f0', r: 4 }}
-                    activeDot={{ r: 6 }}
-                    name="Previous Week"
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -139,6 +156,7 @@ export default function TrendDetails() {
           </CardContent>
         </Card>
 
+        {/* Sentiment Analysis */}
         <Card className="overflow-hidden border-purple-100">
           <CardHeader className="pb-0">
             <CardTitle className="text-xl leading-tight">Customer Response/Sentiments</CardTitle>
@@ -160,7 +178,7 @@ export default function TrendDetails() {
                         dataKey="value"
                       >
                         {prepareSentimentData(trend.sentiment).map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
                       <Tooltip />
@@ -170,7 +188,7 @@ export default function TrendDetails() {
                 )}
               </div>
               <div className="space-y-4">
-                {trend.customerQuotes?.slice(0, 3).map((quote) => (
+                {trend.customerQuotes?.slice(0, 3).map((quote: any) => (
                   <Card key={quote.id} className="border-l-4 border-l-purple-400">
                     <CardContent className="p-4">
                       <p className="italic text-sm">{quote.text}</p>
