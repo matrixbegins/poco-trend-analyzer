@@ -1,44 +1,12 @@
 
 import { TrendSection } from "@/components/TrendSection";
-
-// Helper function to generate random trend data
-function generateTrendData() {
-  return Array.from({ length: 7 }, (_, i) => ({
-    date: new Date(Date.now() - (6 - i) * 24 * 60 * 60 * 1000).toISOString(),
-    score: Math.floor(Math.random() * 1000) + 500,
-  }));
-}
-
-// Sample data for trends
-const industryTrends = Array.from({ length: 10 }, (_, i) => ({
-  name: `Industry Trend ${i + 1}`,
-  data: generateTrendData(),
-  currentScore: Math.floor(Math.random() * 1000) + 500,
-}));
-
-const geographyTrends = Array.from({ length: 10 }, (_, i) => ({
-  name: `Geographic Trend ${i + 1}`,
-  data: generateTrendData(),
-  currentScore: Math.floor(Math.random() * 1000) + 500,
-}));
-
-const competitorTrends = Array.from({ length: 10 }, (_, i) => ({
-  name: `Competitor Trend ${i + 1}`,
-  data: generateTrendData(),
-  currentScore: Math.floor(Math.random() * 1000) + 500,
-}));
-
-const followedTrends = Array.from({ length: 10 }, (_, i) => ({
-  name: `Followed Trend ${i + 1}`,
-  data: generateTrendData(),
-  currentScore: Math.floor(Math.random() * 1000) + 500,
-}));
-
-const generalTrends = Array.from({ length: 10 }, (_, i) => ({
-  name: `General Trend ${i + 1}`,
-  data: generateTrendData(),
-  currentScore: Math.floor(Math.random() * 1000) + 500,
-}));
+import {
+  industryTrends,
+  geographyTrends,
+  competitorTrends,
+  followedTrends,
+  generalTrends,
+} from "@/data/trendData";
 
 export default function Index() {
   return (
@@ -53,38 +21,38 @@ export default function Index() {
 
         <div className="space-y-10">
           <TrendSection
-            title="Trends from Your Industry"
-            description="Top trending topics in your specific industry sector"
-            trends={industryTrends}
-            viewAllHref="/trends/industry"
+            title={industryTrends.name}
+            description={industryTrends.description}
+            trends={industryTrends.trends}
+            viewAllHref={`/trends/${industryTrends.id}`}
           />
 
           <TrendSection
-            title="Trends from Your Geography"
-            description="Popular trends in your geographic region"
-            trends={geographyTrends}
-            viewAllHref="/trends/geography"
+            title={geographyTrends.name}
+            description={geographyTrends.description}
+            trends={geographyTrends.trends}
+            viewAllHref={`/trends/${geographyTrends.id}`}
           />
 
           <TrendSection
-            title="Trends from Your Competitor"
-            description="Track what your competitors are focusing on"
-            trends={competitorTrends}
-            viewAllHref="/trends/competitors"
+            title={competitorTrends.name}
+            description={competitorTrends.description}
+            trends={competitorTrends.trends}
+            viewAllHref={`/trends/${competitorTrends.id}`}
           />
 
           <TrendSection
-            title="Trends that You Follow"
-            description="Stay updated with your favorite trends"
-            trends={followedTrends}
-            viewAllHref="/trends/followed"
+            title={followedTrends.name}
+            description={followedTrends.description}
+            trends={followedTrends.trends}
+            viewAllHref={`/trends/${followedTrends.id}`}
           />
 
           <TrendSection
-            title="General Trends"
-            description="Overall trending topics across all categories"
-            trends={generalTrends}
-            viewAllHref="/trends/general"
+            title={generalTrends.name}
+            description={generalTrends.description}
+            trends={generalTrends.trends}
+            viewAllHref={`/trends/${generalTrends.id}`}
           />
         </div>
       </div>
