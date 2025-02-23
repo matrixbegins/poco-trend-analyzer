@@ -1,21 +1,29 @@
-
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import TrendDetails from "./pages/TrendDetails";
-import ContentGenerator from "./pages/ContentGenerator";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { RouteWrapper } from "@/components/RouteWrapper";
+import Index from "@/pages/Index";
+import TrendDetails from "@/pages/TrendDetails";
+import ContentGenerator from "@/pages/ContentGenerator";
 import NotFound from "./pages/NotFound";
 
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/trends/:trendId" element={<TrendDetails />} />
-        <Route path="/trends/:trendId/generate" element={<ContentGenerator />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
-  );
-}
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RouteWrapper component={Index} />,
+  },
+  {
+    path: "/trends/:trendId",
+    element: <RouteWrapper component={TrendDetails} />,
+  },
+  {
+    path: "/trends/:trendId/generate",
+    element: <RouteWrapper component={ContentGenerator} />,
+  },
+  {
+    path: "*",
+    element: <RouteWrapper component={NotFound} />,
+  },
+]);
 
-export default App;
+export default function App() {
+  return <RouterProvider router={router} />;
+}

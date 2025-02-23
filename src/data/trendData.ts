@@ -1,9 +1,11 @@
 export interface Trend {
   id: string;
   name: string;
+  trendSummary: string;
   data: { date: string; score: number }[];
   currentScore: number;
   category: string;
+  updatedAt: string;
   description?: string;
   sentiment?: {
     positive: number;
@@ -22,14 +24,9 @@ export interface Trend {
     engagement: number;
     publishedAt: string;
     url: string;
+    keywords: string[];
   }[];
-  relatedTrends?: {
-    id: string;
-    name: string;
-    strength: number;
-    description?: string;
-    thumbnail?: string;
-  }[];
+  relatedTrends?: Trend[];
   customerQuotes?: {
     id: string;
     text: string;
@@ -37,6 +34,12 @@ export interface Trend {
     source: string;
     date: string;
   }[];
+  competitors?: {
+    name: string;
+    adoptionPercentage: number;
+    status: 'increasing' | 'decreasing' | 'stable';
+  }[];
+  isHighImpact?: boolean;
 }
 
 export interface TrendCategory {
@@ -55,12 +58,18 @@ const generateTrendData = () => {
 };
 
 // Helper function to generate a random trend
-const generateTrend = (name: string, category: string): Trend => {
+const generateTrend = (name: string, category: string, withRelated: boolean = true): Trend => {
   const id = name.toLowerCase().replace(/\s+/g, '-');
+
+  // Generate a random recent date for updatedAt (between now and 7 days ago)
+  const updatedAt = new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString();
+
   return {
     id,
     name,
+    trendSummary: `A comprehensive analysis of ${name} showing current market dynamics, consumer preferences, and future projections in the ${category} sector.`,
     category,
+    updatedAt,
     data: generateTrendData(),
     currentScore: Math.floor(Math.random() * 1000) + 500,
     description: `Description for ${name}`,
@@ -84,14 +93,15 @@ const generateTrend = (name: string, category: string): Trend => {
       engagement: Math.floor(Math.random() * 1000) + 100,
       publishedAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
       url: '#',
+      keywords: ['AI', 'Innovation', 'Technology', 'Market Trends'].slice(0, Math.floor(Math.random() * 3) + 1),
     })),
-    relatedTrends: Array.from({ length: 5 }, (_, i) => ({
-      id: `related-${id}-${i}`,
-      name: `Related Trend ${i + 1} to ${name}`,
-      strength: Math.random() * 0.8 + 0.2,
-      description: `Description for related trend ${i + 1}`,
-      thumbnail: `https://picsum.photos/seed/${id}-related-${i}/100/100`,
-    })),
+    relatedTrends: withRelated ? [
+      generateTrend('AI in Food Tech', category, false),
+      generateTrend('Sustainable Packaging', category, false),
+      generateTrend('Food Delivery Innovation', category, false),
+      generateTrend('Smart Kitchen Solutions', category, false),
+      generateTrend('Consumer Health Trends', category, false),
+    ] : undefined,
     customerQuotes: Array.from({ length: 3 }, (_, i) => ({
       id: `quote-${id}-${i}`,
       text: `This is a sample customer quote about ${name}. It's ${['positive', 'negative', 'neutral'][i % 3]}.`,
@@ -99,6 +109,14 @@ const generateTrend = (name: string, category: string): Trend => {
       source: ['Twitter', 'Customer Review', 'Survey'][i % 3],
       date: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
     })),
+    competitors: [
+      { name: 'Company Alpha', adoptionPercentage: Math.floor(Math.random() * 30) + 70, status: 'increasing' },
+      { name: 'Beta Foods', adoptionPercentage: Math.floor(Math.random() * 25) + 65, status: 'stable' },
+      { name: 'Delta Kitchen', adoptionPercentage: Math.floor(Math.random() * 20) + 60, status: 'increasing' },
+      { name: 'Gamma Eats', adoptionPercentage: Math.floor(Math.random() * 15) + 45, status: 'decreasing' },
+      { name: 'Omega Foods', adoptionPercentage: Math.floor(Math.random() * 20) + 30, status: 'stable' },
+    ],
+    isHighImpact: Math.random() < 0.5,
   };
 };
 
@@ -108,7 +126,7 @@ export const industryTrends: TrendCategory = {
   name: 'Food Industry Trends',
   description: 'Leading trends shaping the future of food and beverage',
   trends: [
-    generateTrend('Plant-Based Innovation', 'Food Industry'),
+    generateTrend('Plant-Based Innovation', 'Food Industry', true),
     generateTrend('Food Waste Reduction', 'Food Industry'),
     generateTrend('Cloud Kitchens', 'Food Industry'),
     generateTrend('Sustainable Packaging', 'Food Industry'),

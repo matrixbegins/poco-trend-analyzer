@@ -27,7 +27,7 @@ export function SentimentAnalysis({ sentiment, customerQuotes }: SentimentAnalys
   return (
     <Card className="overflow-hidden border-purple-100">
       <CardHeader className="pb-0">
-        <CardTitle className="text-xl leading-tight">Customer Response/Sentiments</CardTitle>
+        <CardTitle className="text-xl leading-tight">Customer Sentiments</CardTitle>
         <Separator className="my-3" />
       </CardHeader>
       <CardContent>

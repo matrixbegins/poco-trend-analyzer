@@ -1,34 +1,34 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-interface Source {
+interface Competitor {
   name: string;
-  mentions: number;
+  adoptionPercentage: number;
 }
 
-interface TrendSourcesProps {
-  sources: Source[];
+interface CompetitorAnalysisProps {
+  competitors: Competitor[];
 }
 
-export function TrendSources({ sources }: TrendSourcesProps) {
+export function CompetitorAnalysis({ competitors }: CompetitorAnalysisProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl leading-tight">Top Sources</CardTitle>
+        <CardTitle className="text-xl leading-tight">Top Competitors</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-4">
-          {sources.map((source) => (
+          {competitors.map((competitor) => (
             <div
-              key={source.name}
+              key={competitor.name}
               className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50"
             >
-              <span className="font-medium">{source.name}</span>
+              <span className="font-medium">{competitor.name}</span>
               <Badge
                 variant="secondary"
-                className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-700"
+                className="bg-purple-100 text-purple-700 hover:bg-purple-100 hover:text-purple-700"
               >
-                {source.mentions.toLocaleString()}
+                {competitor.adoptionPercentage}%
               </Badge>
             </div>
           ))}

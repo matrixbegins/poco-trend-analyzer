@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { TrendCard } from "./TrendCard";
 
@@ -6,6 +5,7 @@ interface Trend {
   name: string;
   data: { date: string; score: number }[];
   currentScore: number;
+  updatedAt: string;
 }
 
 interface TrendSectionProps {
@@ -37,6 +37,7 @@ export function TrendSection({ title, description, trends, viewAllHref }: TrendS
             name={trend.name}
             data={trend.data}
             currentScore={trend.currentScore}
+            updatedAt={trend.updatedAt}
           />
         ))}
       </div>
