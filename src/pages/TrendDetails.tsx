@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
-import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, PieChart, Pie, Cell } from "recharts";
+import { Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import { findTrendById } from "@/data/trendData";
 import { useQuery } from "@tanstack/react-query";
 import { DateRange } from "react-day-picker";
@@ -39,7 +39,7 @@ export default function TrendDetails() {
     ];
   };
 
-  if (isLoading) {
+  if (isLoading || !trend) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white flex items-center justify-center">
         <div className="text-lg">Loading trend details...</div>
@@ -47,25 +47,24 @@ export default function TrendDetails() {
     );
   }
 
-  if (!trend) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white flex items-center justify-center">
-        <div className="text-lg">Trend not found</div>
-      </div>
-    );
-  }
-
-  // Get previous week's data and calculate trends
-  const prevWeekData = trend.data.slice(0, 7).map(item => ({
-    ...item,
-    score: item.score * 0.8
+  const currentWeekData = trend.data.slice(-7).map(item => ({
+    date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    currentWeek: item.score,
+    previousWeek: null
   }));
 
-  const currentTotal = trend.data.reduce((sum, item) => sum + item.score, 0);
-  const previousTotal = prevWeekData.reduce((sum, item) => sum + item.score, 0);
+  const previousWeekData = trend.data.slice(0, 7).map(item => ({
+    date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    previousWeek: item.score * 0.8,
+    currentWeek: null
+  }));
+
+  const combinedData = [...previousWeekData, ...currentWeekData];
+
+  const currentTotal = trend.data.slice(-7).reduce((sum, item) => sum + item.score, 0);
+  const previousTotal = trend.data.slice(0, 7).reduce((sum, item) => sum + (item.score * 0.8), 0);
   const percentageChange = ((currentTotal - previousTotal) / previousTotal) * 100;
 
-  // Sort sources by mentions in descending order
   const sortedSources = [...(trend.sources || [])].sort((a, b) => b.mentions - a.mentions);
 
   return (
@@ -95,7 +94,6 @@ export default function TrendDetails() {
           </div>
         </div>
 
-        {/* Popularity Summary */}
         <Card className="overflow-hidden border-purple-100">
           <CardHeader className="pb-0">
             <CardTitle className="text-xl leading-tight">Popularity Trend</CardTitle>
@@ -123,36 +121,42 @@ export default function TrendDetails() {
           <CardContent>
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={[...prevWeekData, ...trend.data]}>
-                  <XAxis dataKey="date" />
-                  <YAxis />
+                <LineChart data={combinedData}>
+                  <XAxis 
+                    dataKey="date"
+                    tick={{ fill: '#666' }}
+                    tickLine={{ stroke: '#666' }}
+                  />
+                  <YAxis 
+                    tick={{ fill: '#666' }}
+                    tickLine={{ stroke: '#666' }}
+                  />
                   <Tooltip />
-                  <Area
+                  <Legend />
+                  <Line
                     type="monotone"
-                    dataKey="score"
+                    dataKey="currentWeek"
                     stroke="#9b87f5"
-                    fill="#9b87f5"
-                    fillOpacity={0.1}
                     strokeWidth={2}
+                    dot={{ fill: '#9b87f5', r: 4 }}
+                    activeDot={{ r: 6 }}
                     name="Current Week"
                   />
-                  <Area
+                  <Line
                     type="monotone"
-                    data={prevWeekData}
-                    dataKey="score"
+                    dataKey="previousWeek"
                     stroke="#e2e8f0"
-                    fill="#e2e8f0"
-                    fillOpacity={0.1}
                     strokeWidth={2}
+                    dot={{ fill: '#e2e8f0', r: 4 }}
+                    activeDot={{ r: 6 }}
                     name="Previous Week"
                   />
-                </AreaChart>
+                </LineChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
 
-        {/* Sentiment Section */}
         <Card className="overflow-hidden border-purple-100">
           <CardHeader className="pb-0">
             <CardTitle className="text-xl leading-tight">Customer Response/Sentiments</CardTitle>
@@ -200,7 +204,6 @@ export default function TrendDetails() {
           </CardContent>
         </Card>
 
-        {/* Sources Section */}
         <Card className="overflow-hidden border-purple-100">
           <CardHeader className="pb-0">
             <CardTitle className="text-xl leading-tight">Top Sources</CardTitle>
@@ -233,7 +236,6 @@ export default function TrendDetails() {
           </CardContent>
         </Card>
 
-        {/* News Section */}
         <Card className="overflow-hidden border-purple-100">
           <CardHeader className="bg-gradient-to-r from-purple-50 to-transparent">
             <CardTitle>Latest News</CardTitle>
@@ -272,7 +274,6 @@ export default function TrendDetails() {
           </CardContent>
         </Card>
 
-        {/* Related Trends Section */}
         <Card className="overflow-hidden border-purple-100">
           <CardHeader className="bg-gradient-to-r from-purple-50 to-transparent">
             <CardTitle>Related Trends</CardTitle>
@@ -313,7 +314,6 @@ export default function TrendDetails() {
           </CardContent>
         </Card>
 
-        {/* Generate Content Button */}
         <div className="flex justify-center py-8">
           <Button
             size="lg"
