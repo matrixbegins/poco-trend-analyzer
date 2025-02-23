@@ -1,69 +1,82 @@
-# Welcome to your Lovable project
+# POCO Trends Analyzer
 
-## Project info
+A modern analytics dashboard for trend analysis and insights. Built with React, TypeScript, and Tailwind CSS.
 
-**URL**: https://lovable.dev/projects/c95013c2-3db1-42eb-bfff-d6071be16e40
+## Features
 
-## How can I edit this code?
+### Analytics Dashboard
+![Analytics Dashboard](docs/screenshots/Dashboard.png)
+Comprehensive analytics including performance metrics, audience insights, and ROI tracking.
 
-There are several ways of editing your application.
+### Trend Details & Insights
+![Trend Details](docs/screenshots/Trenddetails.png)
+Deep dive into trend patterns, predictive analytics, and content gap analysis.
 
-**Use Lovable**
+### Content Generation & Analysis
+![Content Generator](docs/screenshots/Content-Generation.png)
+AI-powered content generation with virality scoring and optimal posting time recommendations.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c95013c2-3db1-42eb-bfff-d6071be16e40) and start prompting.
+## Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Framework:** React + Vite
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **UI Components:** shadcn/ui
+- **Charts:** Recharts
+- **Maps:** react-simple-maps
+- **Data Fetching:** TanStack Query
+- **Date Handling:** date-fns
 
-**Use your preferred IDE**
+## Getting Started
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Node.js 16+
+- npm or yarn
 
-Follow these steps:
+### Installation
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+1. Clone the repository
+```bash
+git clone https://github.com/your-username/poco-trends.git
+cd poco-trends
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Install dependencies
+```bash
+npm install
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. Start the development server
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The app will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Project Structure
 
-**Use GitHub Codespaces**
+```
+src/
+├── components/
+│   ├── ui/          # Base UI components
+│   └── trends/      # Trend-specific components
+├── data/           # Data models and mock data
+├── hooks/          # Custom React hooks
+├── lib/            # Utility functions
+└── pages/          # Page components
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Contributing
 
-## What technologies are used for this project?
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-This project is built with .
+## License
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+This project is licensed under the MIT License - see the LICENSE file for details
 
-## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/c95013c2-3db1-42eb-bfff-d6071be16e40) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)

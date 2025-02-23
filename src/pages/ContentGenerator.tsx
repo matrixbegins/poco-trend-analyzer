@@ -250,9 +250,9 @@ export default function ContentGenerator() {
                   <CardContent>
                     <Textarea
                       value={generatedContent}
-                      readOnly
                       className="h-64"
                       placeholder="Generated content will appear here..."
+                      onChange={(e) => setGeneratedContent(e.target.value)}
                     />
                   </CardContent>
                 </Card>
