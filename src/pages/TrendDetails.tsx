@@ -23,13 +23,13 @@ import {
   PieChart,
   Pie,
   Cell,
-} from "recharts";
+} from 'recharts';
 
 // Constants for the pie chart
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 // Utility function to prepare sentiment data
-const prepareSentimentData = (sentiment: any) => {
+const prepareSentimentData = (sentiment: Record<string, number> | null | undefined) => {
   if (!sentiment) return [];
   return Object.entries(sentiment).map(([name, value]) => ({
     name,
