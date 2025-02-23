@@ -9,13 +9,11 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { DateRange } from "react-day-picker";
 
 interface DateRangePickerProps {
-  dateRange: {
-    from: Date;
-    to: Date;
-  };
-  onDateRangeChange: (range: { from: Date; to: Date }) => void;
+  dateRange: DateRange;
+  onDateRangeChange: (range: DateRange) => void;
 }
 
 export function DateRangePicker({ dateRange, onDateRangeChange }: DateRangePickerProps) {
@@ -50,14 +48,9 @@ export function DateRangePicker({ dateRange, onDateRangeChange }: DateRangePicke
             initialFocus
             mode="range"
             defaultMonth={dateRange?.from}
-            selected={{ 
-              from: dateRange.from,
-              to: dateRange.to 
-            }}
+            selected={dateRange}
             onSelect={(range) => {
-              if (range?.from && range?.to) {
-                onDateRangeChange(range);
-              }
+              onDateRangeChange(range || { from: undefined, to: undefined });
             }}
             numberOfMonths={2}
           />

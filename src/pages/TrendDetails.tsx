@@ -16,7 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function TrendDetails() {
   const { trendId } = useParams();
-  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
+  const [dateRange, setDateRange] = useState<DateRange>({
     from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     to: new Date(),
   });
