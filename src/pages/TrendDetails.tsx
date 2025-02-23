@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -321,6 +322,7 @@ export default function TrendDetails() {
           <Button
             size="lg"
             className="bg-gradient-to-r from-purple-600 to-purple-800 hover:opacity-90 transition-opacity text-white px-8 py-6 text-lg"
+            onClick={() => navigate(`/trends/${trendId}/generate`)}
           >
             Generate Content Ideas
           </Button>
