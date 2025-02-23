@@ -50,6 +50,20 @@ export default function TrendDetails() {
     ];
   };
 
+  const prepareTrendData = () => {
+    // Get the last 7 days of data
+    const currentWeekData = trend.data.slice(-7);
+    // Get the previous 7 days of data
+    const previousWeekData = trend.data.slice(-14, -7);
+
+    // Create array of data points with both current and previous week values
+    return currentWeekData.map((item, index) => ({
+      date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      currentWeek: item.score,
+      previousWeek: previousWeekData[index]?.score * 0.8 || 0
+    }));
+  };
+
   if (isLoading || !trend) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white flex items-center justify-center">
@@ -58,22 +72,9 @@ export default function TrendDetails() {
     );
   }
 
-  const currentWeekData = trend.data.slice(-7).map(item => ({
-    date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-    currentWeek: item.score,
-    previousWeek: null
-  }));
-
-  const previousWeekData = trend.data.slice(0, 7).map(item => ({
-    date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-    previousWeek: item.score * 0.8,
-    currentWeek: null
-  }));
-
-  const combinedData = [...previousWeekData, ...currentWeekData];
-
-  const currentTotal = trend.data.slice(-7).reduce((sum, item) => sum + item.score, 0);
-  const previousTotal = trend.data.slice(0, 7).reduce((sum, item) => sum + (item.score * 0.8), 0);
+  const trendData = prepareTrendData();
+  const currentTotal = trendData.reduce((sum, item) => sum + item.currentWeek, 0);
+  const previousTotal = trendData.reduce((sum, item) => sum + item.previousWeek, 0);
   const percentageChange = ((currentTotal - previousTotal) / previousTotal) * 100;
 
   const sortedSources = [...(trend.sources || [])].sort((a, b) => b.mentions - a.mentions);
@@ -132,7 +133,7 @@ export default function TrendDetails() {
           <CardContent>
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={combinedData}>
+                <LineChart data={trendData}>
                   <XAxis 
                     dataKey="date"
                     tick={{ fill: '#666' }}
