@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -80,7 +79,7 @@ export default function TrendDetails() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white">
       <div className="container py-8 space-y-8">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center">
           <Button
             variant="ghost"
             onClick={() => navigate(-1)}
@@ -88,12 +87,6 @@ export default function TrendDetails() {
           >
             <ArrowLeft className="h-4 w-4" />
             Back
-          </Button>
-          <Button
-            onClick={() => navigate(`/trends/${trend.id}/generate`)}
-            className="bg-accent hover:bg-accent/90"
-          >
-            Generate Content
           </Button>
         </div>
 

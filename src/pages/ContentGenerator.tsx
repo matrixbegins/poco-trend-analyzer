@@ -1,14 +1,14 @@
 
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useParams } from "react-router-dom";
 import { findTrendById } from "@/data/trendData";
-import { Gauge } from "lucide-react";
+import { ArrowLeft, Gauge } from "lucide-react";
 import {
   Facebook,
   Instagram,
@@ -54,6 +54,7 @@ const CHANNELS = [
 ];
 
 export default function ContentGenerator() {
+  const navigate = useNavigate();
   const { trendId } = useParams();
   const trend = findTrendById(trendId || "");
   
@@ -65,14 +66,15 @@ export default function ContentGenerator() {
   });
 
   const [generatedContent, setGeneratedContent] = useState("");
+  const [hasGenerated, setHasGenerated] = useState(false);
   const [viralityScore] = useState(85);
   const [bestTime] = useState("Tuesday at 10:00 AM EST");
 
   const handleGenerate = () => {
-    // Placeholder for content generation logic
     setGeneratedContent(
       `Sample generated content for ${trend?.name} with ${config.format} format and ${config.tonality} tone.`
     );
+    setHasGenerated(true);
   };
 
   const handleSuggestPrompt = () => {
@@ -89,6 +91,18 @@ export default function ContentGenerator() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white p-8">
       <div className="container mx-auto">
+        {/* Header with back button */}
+        <div className="mb-6">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Trend Details
+          </Button>
+        </div>
+
         <h1 className="text-2xl font-semibold mb-6">Generate Content for {trend.name}</h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Side - Configuration */}
@@ -198,79 +212,87 @@ export default function ContentGenerator() {
           </div>
 
           {/* Right Side - Output */}
-          <div className="space-y-6">
-            {/* Generated Content */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Generated Content</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Textarea
-                  value={generatedContent}
-                  readOnly
-                  className="h-64"
-                  placeholder="Generated content will appear here..."
-                />
-              </CardContent>
-            </Card>
-
-            {/* Metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Virality Score */}
+          {hasGenerated ? (
+            <div className="space-y-6">
+              {/* Generated Content */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Virality Score</CardTitle>
+                  <CardTitle>Generated Content</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center gap-4">
-                    <Gauge className="h-12 w-12 text-accent" />
-                    <div>
-                      <p className="text-3xl font-bold">{viralityScore}/100</p>
-                      <p className="text-sm text-muted-foreground">
-                        High potential for engagement
-                      </p>
-                    </div>
-                  </div>
+                  <Textarea
+                    value={generatedContent}
+                    readOnly
+                    className="h-64"
+                    placeholder="Generated content will appear here..."
+                  />
                 </CardContent>
               </Card>
 
-              {/* Best Time to Post */}
+              {/* Metrics */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Virality Score */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Virality Score</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center gap-4">
+                      <Gauge className="h-12 w-12 text-accent" />
+                      <div>
+                        <p className="text-3xl font-bold">{viralityScore}/100</p>
+                        <p className="text-sm text-muted-foreground">
+                          High potential for engagement
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Best Time to Post */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Best Time to Post</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-semibold">{bestTime}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Optimal engagement time for your audience
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Recommended Channels */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Best Time to Post</CardTitle>
+                  <CardTitle>Recommended Channels</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-semibold">{bestTime}</p>
-                  <p className="text-sm text-muted-foreground">
-                    Optimal engagement time for your audience
+                  <div className="grid grid-cols-2 gap-4">
+                    {CHANNELS.slice(0, 4).map(({ name, icon: Icon }) => (
+                      <div
+                        key={name}
+                        className="flex items-center gap-2 p-3 rounded-lg bg-accent/5"
+                      >
+                        <Icon className="h-5 w-5 text-accent" />
+                        <span>{name}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-4">
+                    These channels are recommended based on your content type and audience engagement patterns.
                   </p>
                 </CardContent>
               </Card>
             </div>
-
-            {/* Recommended Channels */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Recommended Channels</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4">
-                  {CHANNELS.slice(0, 4).map(({ name, icon: Icon }) => (
-                    <div
-                      key={name}
-                      className="flex items-center gap-2 p-3 rounded-lg bg-accent/5"
-                    >
-                      <Icon className="h-5 w-5 text-accent" />
-                      <span>{name}</span>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-sm text-muted-foreground mt-4">
-                  These channels are recommended based on your content type and audience engagement patterns.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-muted-foreground text-lg">
+                Configure your content settings and click "Generate Content" to see the results
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
