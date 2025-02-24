@@ -184,6 +184,14 @@ export default function TrendDetails() {
             <Gauge className="h-3 w-3" />
             <span>Virality: 85%</span>
           </Badge>
+
+          <Badge
+            variant="secondary"
+            className="flex items-center gap-1 bg-blue-100 text-blue-700 hover:bg-blue-100 border-blue-200"
+          >
+            <img src="/mailchimp-svgrepo-com.svg" width={16} height={16} className="h-3 w-3" />
+            <span>Adoption {Math.floor(Math.random() * 100)}%</span>
+          </Badge>
         </div>
 
         <p className="text-lg text-gray-600 leading-relaxed">
