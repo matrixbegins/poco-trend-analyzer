@@ -18,7 +18,21 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useState, useEffect } from 'react';
-import { ArrowUp, Share2, Zap, Info, Play, Image, CirclePlay, FileText } from 'lucide-react';
+import {
+  ArrowUp,
+  Share2,
+  Zap,
+  Info,
+  Play,
+  Image,
+  CirclePlay,
+  FileText,
+  ArrowRight,
+  Users,
+  BarChart,
+  Target,
+  TrendingUp
+} from 'lucide-react';
 import type { TrendOption } from '@/pages/CompareTrends';
 import { findTrendById } from '@/data/trendData';
 
@@ -447,7 +461,46 @@ export function TrendComparison({ trends }: TrendComparisonProps) {
     'Play': Play,
     'Image': Image,
     'CirclePlay': CirclePlay,
-    'FileText': FileText
+    'FileText': FileText,
+    'Users': Users,
+    'BarChart': BarChart,
+    'Target': Target,
+    'TrendingUp': TrendingUp
+  };
+
+  const getActionableInsights = (trends: TrendOption[]) => {
+    return [
+      {
+        title: "Most Effective Content Format",
+        insight: "Video content shows highest engagement across trends with 75% average engagement rate",
+        action: "Prioritize video content production, especially short-form videos under 3 minutes",
+        icon: "Play"
+      },
+      {
+        title: "Audience Targeting Opportunity",
+        insight: "25-34 age group shows strongest growth potential across all trends",
+        action: "Focus campaign targeting on young professionals with personalized messaging",
+        icon: "Users"
+      },
+      {
+        title: "Platform Strategy",
+        insight: "TikTok and YouTube lead in ROI and engagement metrics",
+        action: "Reallocate 40% of marketing budget to these platforms for maximum impact",
+        icon: "BarChart"
+      },
+      {
+        title: "Competitive Edge",
+        insight: "Market penetration in premium segment shows 20% gap vs competitors",
+        action: "Develop premium offerings to capture untapped market potential",
+        icon: "Target"
+      },
+      {
+        title: "Cost Optimization",
+        insight: "Customer acquisition costs 30% lower through social channels",
+        action: "Scale social media campaigns while maintaining current engagement rates",
+        icon: "TrendingUp"
+      }
+    ];
   };
 
   return (
@@ -509,6 +562,44 @@ export function TrendComparison({ trends }: TrendComparisonProps) {
                 }
               }}
             />
+          </div>
+        </Card>
+
+        {/* Actionable Insights */}
+        <Card className="p-4 bg-gradient-to-r from-purple-50 to-blue-50">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-semibold text-purple-900">Actionable Insights</h2>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="h-4 w-4 text-purple-600" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs">Key takeaways and recommended actions based on trend comparison</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <span className="text-xs text-purple-600">Top 5 Strategic Recommendations</span>
+            </div>
+
+            <div className="grid grid-cols-5 gap-4">
+              {getActionableInsights(trends).map((item, i) => (
+                <div key={i} className="space-y-2 p-3 bg-white rounded-lg border border-purple-100 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <IconComponent icon={item.icon} />
+                    <h3 className="text-sm font-medium text-purple-900">{item.title}</h3>
+                  </div>
+                  <p className="text-xs text-gray-600">{item.insight}</p>
+                  <div className="pt-2 border-t border-purple-100">
+                    <div className="flex items-center gap-1 text-xs text-purple-700">
+                      <ArrowRight className="h-3 w-3" />
+                      <span>{item.action}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </Card>
 
@@ -1442,9 +1533,13 @@ const IconComponent = ({ icon }: { icon: string }) => {
     'Play': Play,
     'Image': Image,
     'CirclePlay': CirclePlay,
-    'FileText': FileText
+    'FileText': FileText,
+    'Users': Users,
+    'BarChart': BarChart,
+    'Target': Target,
+    'TrendingUp': TrendingUp
   };
 
   const Icon = iconMap[icon as keyof typeof iconMap];
-  return <Icon className="h-3 w-3 text-muted-foreground" />;
+  return Icon ? <Icon className="h-3 w-3 text-muted-foreground" /> : null;
 };
