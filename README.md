@@ -5,16 +5,25 @@ A modern analytics dashboard for trend analysis and insights. Built with React, 
 ## Features
 
 ### Analytics Dashboard
-![Analytics Dashboard](docs/screenshots/Dashboard.png)
+![Analytics Dashboard](docs/screenshots/Dashboard-new_optimized.png)
 Comprehensive analytics including performance metrics, audience insights, and ROI tracking.
 
+### Smart Search
+![Dashboard Search](docs/screenshots/Dashboard-search_optimized.png)
+Powerful search functionality to find and analyze trends quickly.
+
 ### Trend Details & Insights
-![Trend Details](docs/screenshots/Trenddetails.png)
+![Trend Details](docs/screenshots/trend-details_optimized.png)
 Deep dive into trend patterns, predictive analytics, and content gap analysis.
 
-### Content Generation & Analysis
-![Content Generator](docs/screenshots/Content-Generation.png)
-AI-powered content generation with virality scoring and optimal posting time recommendations.
+### Trend Comparison
+![Compare Trends](docs/screenshots/Compare-Trends_optimized.png)
+Compare multiple trends side by side with detailed metrics and insights.
+
+### News Feed
+![News Feed](docs/screenshots/News-Feed_optimized_v2.png)
+Stay updated with the latest industry news and developments.
+
 
 ## Tech Stack
 
