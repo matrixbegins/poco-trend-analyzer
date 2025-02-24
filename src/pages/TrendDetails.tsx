@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { findTrendById } from "@/data/trendData";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Info, ArrowRight, Play, Users, BarChart, Target, TrendingUp } from "lucide-react";
 import { TrendStats } from "@/components/trends/TrendStats";
 import { SentimentAnalysis } from "@/components/trends/SentimentAnalysis";
 import { TrendSources } from "@/components/trends/TrendSources";
@@ -19,6 +19,15 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { getInsightsData } from '@/data/insightsData';
 import { useState } from "react";
 import { TrendCompareModal } from "@/components/trends/TrendCompareModal";
+import { Card } from '@/components/ui/card';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { LineChart } from '@/components/charts/LineChart';
+import { IconComponent } from '@/components/ui/IconComponent';
 
 export default function TrendDetails() {
   const navigate = useNavigate();
@@ -83,7 +92,51 @@ export default function TrendDetails() {
 
   const insightsData = getInsightsData(trend.name, trend.category);
 
+  const getActionableInsights = () => [
+    {
+      title: "Growth Trajectory",
+      insight: `${trend.name} shows ${Math.round(percentageChange)}% growth in last 30 days`,
+      action: "Capitalize on momentum with increased content production",
+      icon: "TrendingUp"
+    },
+    {
+      title: "Content Strategy",
+      insight: "Video content leads with 75% engagement rate",
+      action: "Focus on short-form video content under 3 minutes",
+      icon: "Play"
+    },
+    {
+      title: "Audience Focus",
+      insight: "25-34 age group shows highest engagement",
+      action: "Target young professionals with tailored messaging",
+      icon: "Users"
+    },
+    {
+      title: "Platform Opportunity",
+      insight: "TikTok shows highest growth potential",
+      action: "Increase presence on TikTok with trending formats",
+      icon: "BarChart"
+    },
+    {
+      title: "Market Position",
+      insight: "Leading in premium segment with 45% share",
+      action: "Maintain premium positioning while expanding reach",
+      icon: "Target"
+    }
+  ];
+
+  const chartData = {
+    labels: trend.data.map(d => new Date(d.date).toLocaleDateString()),
+    datasets: [{
+      label: trend.name,
+      data: trend.data.map(d => d.score),
+      borderColor: '#2563eb',
+      tension: 0.4
+    }]
+  };
+
   return (
+    <TooltipProvider>
     <div className="space-y-8">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
@@ -138,6 +191,45 @@ export default function TrendDetails() {
         </p>
       </div>
 
+
+      <TooltipProvider>
+        <Card className="p-4 bg-gradient-to-r from-purple-50 to-blue-50">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-semibold text-purple-900">Trend Insights</h2>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="h-4 w-4 text-purple-600" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs">Key insights and recommended actions for this trend</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {getActionableInsights().map((item, i) => (
+                <div key={i} className="p-3 bg-white rounded-lg border border-purple-100 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <IconComponent icon={item.icon} />
+                    <h3 className="text-sm font-medium text-purple-900">{item.title}</h3>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-2">{item.insight}</p>
+                  <div className="pt-2 mt-2 border-t border-purple-100">
+                    <div className="flex items-center gap-1 text-xs text-purple-700">
+                      <ArrowRight className="h-3 w-3" />
+                      <span>{item.action}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Card>
+      </TooltipProvider>
+
       <TrendStats
         trendData={trendData}
         currentTotal={currentTotal}
@@ -182,5 +274,6 @@ export default function TrendDetails() {
       />
 
     </div>
+    </TooltipProvider>
   );
 }

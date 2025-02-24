@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import type { TrendOption } from '@/pages/CompareTrends';
 import { findTrendById } from '@/data/trendData';
+import { IconComponent } from '@/components/ui/IconComponent';
 
 // Register all required elements
 ChartJS.register(
@@ -456,17 +457,6 @@ export function TrendComparison({ trends }: TrendComparisonProps) {
       }
     ]
   });
-
-  const iconMap = {
-    'Play': Play,
-    'Image': Image,
-    'CirclePlay': CirclePlay,
-    'FileText': FileText,
-    'Users': Users,
-    'BarChart': BarChart,
-    'Target': Target,
-    'TrendingUp': TrendingUp
-  };
 
   const getActionableInsights = (trends: TrendOption[]) => {
     return [
@@ -1527,19 +1517,3 @@ function getRandomColor() {
   ];
   return colors[Math.floor(Math.random() * colors.length)];
 }
-
-const IconComponent = ({ icon }: { icon: string }) => {
-  const iconMap = {
-    'Play': Play,
-    'Image': Image,
-    'CirclePlay': CirclePlay,
-    'FileText': FileText,
-    'Users': Users,
-    'BarChart': BarChart,
-    'Target': Target,
-    'TrendingUp': TrendingUp
-  };
-
-  const Icon = iconMap[icon as keyof typeof iconMap];
-  return Icon ? <Icon className="h-3 w-3 text-muted-foreground" /> : null;
-};
