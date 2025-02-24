@@ -5,15 +5,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Plus, Check, Wand2, Megaphone, MoreHorizontal, Share2, Download } from "lucide-react";
+import {
+  Plus, Check, Wand2, Megaphone, MoreHorizontal,
+  Share2, Download, GitCompareArrows
+} from "lucide-react";
 import { useState } from "react";
 
 interface TrendActionsProps {
   onGenerateContent: () => void;
   onCreateCampaign: () => void;
+  onCompare: () => void;
 }
 
-export function TrendActions({ onGenerateContent, onCreateCampaign }: TrendActionsProps) {
+export function TrendActions({ onGenerateContent, onCreateCampaign, onCompare }: TrendActionsProps) {
   const [isFollowing, setIsFollowing] = useState(false);
 
   return (
@@ -51,6 +55,17 @@ export function TrendActions({ onGenerateContent, onCreateCampaign }: TrendActio
           <Wand2 className="h-4 w-4 mr-1" />
           Generate Ideas
         </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="hover:bg-white hover:text-purple-600"
+          onClick={onCompare}
+        >
+            <GitCompareArrows className="h-4 w-4 mr-1" />
+          Compare Trends
+        </Button>
+
         <Button
           variant="ghost"
           size="sm"

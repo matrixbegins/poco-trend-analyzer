@@ -1,123 +1,110 @@
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Clock, BarChart2, Share2, MessageSquare, ExternalLink } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { BarChart2, ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef } from "react";
-
-interface NewsItem {
-  id: string;
-  title: string;
-  source: string;
-  image: string;
-  engagement: number;
-  publishedAt: string;
-  url: string;
-  keywords: string[];
-}
+import { NewsItem } from "@/data/newsData";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { getFallbackImage } from "@/utils/imageUtils";
 
 interface TrendNewsProps {
   news: NewsItem[];
-  trendName: string;
+  title?: string;
+  description?: string;
+  trendName?: string;  // For trend-specific news
 }
 
-export function TrendNews({ news, trendName }: TrendNewsProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+export function TrendNews({ news, title, description, trendName }: TrendNewsProps) {
+  const displayTitle = title || (trendName ? `Latest News about ${trendName}` : 'Latest News');
+  const displayDescription = description || (trendName ? `Stay updated with the latest developments in ${trendName}` : undefined);
 
-  const scroll = (direction: 'left' | 'right') => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const cardWidth = 400; // Slightly wider than related trends
-    const gap = 16;
-    const scrollAmount = cardWidth + gap;
-
-    container.scrollBy({
-      left: direction === 'left' ? -scrollAmount : scrollAmount,
-      behavior: 'smooth'
-    });
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const img = e.target as HTMLImageElement;
+    const category = img.dataset.category || 'default';
+    img.src = getFallbackImage(category);
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-xl leading-tight flex items-center gap-2">
-          Trending News
-          <span className="text-sm text-gray-500 font-normal">
-            | {trendName}
-          </span>
-        </CardTitle>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => scroll('left')}
-            className="h-8 w-8"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => scroll('right')}
-            className="h-8 w-8"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </CardHeader>
-      <div
-        ref={containerRef}
-        className="relative overflow-x-auto px-6 pb-6 scrollbar-hide"
-      >
-        <div className="flex gap-4">
-          {news.map((item) => (
-            <a
-              key={item.id}
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-none w-[400px] group"
-            >
-              <div className="bg-white rounded-lg overflow-hidden border border-gray-100 transition-shadow hover:shadow-md">
-                <div className="aspect-video relative overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-4 space-y-3">
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <span className="font-medium text-purple-600">{item.source}</span>
-                    <div className="flex items-center gap-1">
-                      <BarChart2 className="h-4 w-4 text-gray-400" />
-                      <span>{item.engagement.toLocaleString()}</span>
-                    </div>
-                  </div>
-                  <h3 className="font-semibold line-clamp-2 group-hover:text-purple-600 transition-colors">
-                    {item.title}
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {item.keywords.map((keyword, index) => (
-                      <Badge
-                        key={index}
-                        variant="secondary"
-                        className="bg-purple-50 text-purple-600 hover:bg-purple-50"
-                      >
-                        {keyword}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {formatDistanceToNow(new Date(item.publishedAt), { addSuffix: true })}
-                  </div>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
+    <div className="space-y-4">
+      <div>
+        <h2 className="text-2xl font-bold">{displayTitle}</h2>
+        {displayDescription && <p className="text-muted-foreground">{displayDescription}</p>}
       </div>
-    </Card>
+
+      <Carousel className="w-full">
+        <CarouselContent className="-ml-2 md:-ml-4">
+          {news.map((item) => (
+            <CarouselItem key={item.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block group"
+              >
+                <Card className="overflow-hidden transition-all duration-200 hover:shadow-lg">
+                  {item.imageUrl && (
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={item.imageUrl}
+                        alt={item.title}
+                        className="object-cover w-full h-full transform transition-transform duration-300 group-hover:scale-105"
+                        onError={handleImageError}
+                        data-category={item.category}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                  )}
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Badge
+                        variant="secondary"
+                        className="bg-purple-100 text-purple-700 hover:bg-purple-200"
+                      >
+                        {item.category}
+                      </Badge>
+                      <span className="text-sm text-muted-foreground flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {formatDistanceToNow(new Date(item.publishedAt), { addSuffix: true })}
+                      </span>
+                    </div>
+                    <h3 className="font-semibold mb-3 text-lg group-hover:text-purple-700 transition-colors line-clamp-2">
+                      {item.title}
+                    </h3>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-purple-600">{item.source}</span>
+                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <BarChart2 className="h-4 w-4" />
+                          <span>2.5k</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <MessageSquare className="h-4 w-4" />
+                          <span>128</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Share2 className="h-4 w-4" />
+                          <span>45</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-center gap-1 text-purple-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                      Read more
+                      <ExternalLink className="h-3 w-3" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </a>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+    </div>
   );
 }

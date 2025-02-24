@@ -1,3 +1,6 @@
+import { NewsItem } from './newsData';
+import { getImageUrl } from '@/utils/imageUtils';
+
 export interface Trend {
   id: string;
   name: string;
@@ -16,16 +19,7 @@ export interface Trend {
     name: string;
     mentions: number;
   }[];
-  news?: {
-    id: string;
-    title: string;
-    source: string;
-    image: string;
-    engagement: number;
-    publishedAt: string;
-    url: string;
-    keywords: string[];
-  }[];
+  news: NewsItem[];
   relatedTrends?: Trend[];
   customerQuotes?: {
     id: string;
@@ -85,16 +79,7 @@ const generateTrend = (name: string, category: string, withRelated: boolean = tr
       { name: 'Blog Posts', mentions: Math.floor(Math.random() * 300) + 30 },
       { name: 'Forums', mentions: Math.floor(Math.random() * 200) + 20 },
     ],
-    news: Array.from({ length: 5 }, (_, i) => ({
-      id: `news-${id}-${i}`,
-      title: `Latest news about ${name} - Article ${i + 1}`,
-      source: ['TechCrunch', 'Forbes', 'Reuters', 'Bloomberg', 'CNBC'][i],
-      image: `https://picsum.photos/seed/${id}-${i}/200/200`,
-      engagement: Math.floor(Math.random() * 1000) + 100,
-      publishedAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
-      url: '#',
-      keywords: ['AI', 'Innovation', 'Technology', 'Market Trends'].slice(0, Math.floor(Math.random() * 3) + 1),
-    })),
+    news: generateTrendNews(name, category),
     relatedTrends: withRelated ? [
       generateTrend('AI in Food Tech', category, false),
       generateTrend('Sustainable Packaging', category, false),
@@ -119,6 +104,37 @@ const generateTrend = (name: string, category: string, withRelated: boolean = tr
     isHighImpact: Math.random() < 0.5,
   };
 };
+
+// Update the news data in your trends
+const generateTrendNews = (trendName: string, category: string): NewsItem[] => [
+  {
+    id: '1',
+    title: `Latest Developments in ${trendName}`,
+    source: 'Industry Weekly',
+    url: '#',
+    publishedAt: new Date().toISOString(),
+    category: category,
+    imageUrl: getImageUrl(category, '1')
+  },
+  {
+    id: '2',
+    title: `${trendName}: Market Analysis and Future Prospects`,
+    source: 'Market Insights',
+    url: '#',
+    publishedAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+    category: category,
+    imageUrl: getImageUrl(category, '2')
+  },
+  {
+    id: '3',
+    title: `How ${trendName} is Reshaping the Industry`,
+    source: 'Tech Review',
+    url: '#',
+    publishedAt: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+    category: category,
+    imageUrl: getImageUrl(category, '3')
+  }
+];
 
 // Generate sample data for the food industry category
 export const industryTrends: TrendCategory = {
@@ -231,4 +247,20 @@ export const findTrendById = (trendId: string): Trend | undefined => {
 // Helper function to find a category by ID
 export const findCategoryById = (categoryId: string): TrendCategory | undefined => {
   return allTrendCategories.find(c => c.id === categoryId);
+};
+
+// Add this function to your trendData.ts
+export const findTrendsByQuery = (query: string) => {
+  const allTrends = [
+    ...industryTrends.trends,
+    ...geographyTrends.trends,
+    ...competitorTrends.trends,
+    ...followedTrends.trends,
+    ...generalTrends.trends,
+  ];
+
+  return allTrends.filter(trend =>
+    trend.name.toLowerCase().includes(query.toLowerCase()) ||
+    trend.category.toLowerCase().includes(query.toLowerCase())
+  ).map(({ id, name, category }) => ({ id, name, category }));
 };

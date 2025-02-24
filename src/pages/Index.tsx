@@ -8,11 +8,10 @@ import {
   geographyTrends,
   competitorTrends,
   followedTrends,
-  generalTrends,
   Trend,
 } from "@/data/trendData";
-import { Header } from "@/components/Header";
-import { Layout } from "@/components/Layout";
+import { TrendNews } from "@/components/trends/TrendNews";
+import { personalizedNews, topicNews } from '@/data/newsData';
 
 export default function Index() {
   const [searchInput, setSearchInput] = useState("");
@@ -134,11 +133,16 @@ export default function Index() {
           viewAllHref={`/trends/${followedTrends.id}`}
         />
 
-        <TrendSection
-          title={generalTrends.name}
-          description={generalTrends.description}
-          trends={filterTrends(generalTrends.trends)}
-          viewAllHref={`/trends/${generalTrends.id}`}
+        <TrendNews
+          title="News for You"
+          description="Personalized news based on your industry and preferences"
+          news={personalizedNews}
+        />
+
+        <TrendNews
+          title="Topics You Follow"
+          description="Latest updates from your areas of interest"
+          news={topicNews}
         />
       </div>
     </div>

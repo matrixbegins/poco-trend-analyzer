@@ -16,10 +16,14 @@ import { TrendNews } from "@/components/trends/TrendNews";
 import { TrendInsights } from "@/components/trends/TrendInsights";
 import { TrendAnalyticsDashboard } from "@/components/trends/analytics/TrendAnalyticsDashboard";
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { getInsightsData } from '@/data/insightsData';
+import { useState } from "react";
+import { TrendCompareModal } from "@/components/trends/TrendCompareModal";
 
 export default function TrendDetails() {
   const navigate = useNavigate();
   const { trendId } = useParams();
+  const [compareModalOpen, setCompareModalOpen] = useState(false);
 
   const { data: trend, isLoading, isError } = useQuery({
     queryKey: ['trend', trendId],
@@ -77,34 +81,7 @@ export default function TrendDetails() {
     console.log('Create campaign clicked');
   };
 
-  // Sample data for insights
-  const insightsData = {
-    contentFormats: [
-      { name: 'Video', value: 45, color: '#9b87f5' },
-      { name: 'Blog', value: 25, color: '#f59b87' },
-      { name: 'Infographic', value: 20, color: '#87f59b' },
-      { name: 'Podcast', value: 10, color: '#f587e4' },
-    ],
-    marketingChannels: [
-      { name: 'Social', value: 40, color: '#9b87f5' },
-      { name: 'Email', value: 25, color: '#f59b87' },
-      { name: 'Search', value: 20, color: '#87f59b' },
-      { name: 'Ads', value: 15, color: '#f587e4' },
-    ],
-    dailyEngagement: [
-      { day: 'Mon', engagement: 45 },
-      { day: 'Tue', engagement: 52 },
-      { day: 'Wed', engagement: 49 },
-      { day: 'Thu', engagement: 63 },
-      { day: 'Fri', engagement: 51 },
-      { day: 'Sat', engagement: 33 },
-      { day: 'Sun', engagement: 30 },
-    ],
-    audienceReach: [
-      { name: 'Reached', value: 78 },
-      { name: 'Remaining', value: 22 },
-    ],
-  };
+  const insightsData = getInsightsData(trend.name, trend.category);
 
   return (
     <div className="space-y-8">
@@ -113,10 +90,13 @@ export default function TrendDetails() {
           <h1 className="text-3xl font-bold text-gray-900">
             {trend.name}
           </h1>
-          <TrendActions
-            onGenerateContent={handleGenerateContent}
-            onCreateCampaign={handleCreateCampaign}
-          />
+          <div className="flex items-center gap-2">
+            <TrendActions
+              onGenerateContent={handleGenerateContent}
+              onCreateCampaign={handleCreateCampaign}
+              onCompare={() => setCompareModalOpen(true)}
+            />
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -194,6 +174,12 @@ export default function TrendDetails() {
           trendName={trend.name}
         />
       )}
+
+      <TrendCompareModal
+        open={compareModalOpen}
+        onOpenChange={setCompareModalOpen}
+        currentTrendId={trendId || ''}
+      />
 
     </div>
   );

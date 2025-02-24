@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import { Navigation } from "@/components/Navigation";
 export function Header() {
   return (
     <header className="bg-purple-900 border-b border-purple-800">
@@ -40,17 +40,7 @@ export function Header() {
             </div>
           </Link>
 
-          <nav className="flex items-center space-x-6">
-            <Link to="/" className="text-purple-100 hover:text-white transition-colors">
-              Dashboard
-            </Link>
-            <Link to="/trends" className="text-purple-100 hover:text-white transition-colors">
-              All Trends
-            </Link>
-            <Link to="/favorites" className="text-purple-100 hover:text-white transition-colors">
-              Favorites
-            </Link>
-          </nav>
+          <Navigation />
         </div>
       </div>
     </header>
