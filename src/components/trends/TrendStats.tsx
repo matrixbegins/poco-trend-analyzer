@@ -43,63 +43,60 @@ export function TrendStats({ trendData, currentTotal, percentageChange, updatedA
   };
 
   return (
-    <Card className="overflow-hidden border-purple-100">
-      <CardHeader className="pb-0">
+    <Card className="h-full">
+      <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-xl leading-tight">Popularity Trend</CardTitle>
-          <div className="flex items-center gap-1 text-gray-500">
+          <CardTitle className="text-base font-medium">Popularity Trend</CardTitle>
+          <div className="flex items-center gap-1 text-gray-500 text-xs">
             <Clock className="h-3 w-3" />
-            <span className="text-xs">
-              updated {formatDistanceToNow(new Date(updatedAt), { addSuffix: true })}
-            </span>
+            <span>updated {formatDistanceToNow(new Date(updatedAt), { addSuffix: true })}</span>
           </div>
         </div>
-        <Separator className="my-3" />
-        <div className="grid grid-cols-2 gap-8 py-4">
+      </CardHeader>
+      <CardContent>
+        {/* Metrics Row */}
+        <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <p className="text-sm text-muted-foreground">Total Engagement</p>
-            <p className="text-2xl font-semibold">{currentTotal.toLocaleString()}</p>
+            <p className="text-xl font-semibold">{currentTotal.toLocaleString()}</p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Week over Week Change</p>
-            <div className="flex items-center gap-2">
+            <p className="text-sm text-muted-foreground">Week over Week</p>
+            <div className="flex items-center gap-1">
               {percentageChange > 0 ? (
-                <TrendingUp className="h-5 w-5 text-green-500" />
+                <TrendingUp className="h-4 w-4 text-green-500" />
               ) : (
-                <TrendingDown className="h-5 w-5 text-red-500" />
+                <TrendingDown className="h-4 w-4 text-red-500" />
               )}
-              <p className={`text-2xl font-semibold ${percentageChange > 0 ? 'text-green-500' : 'text-red-500'}`}>
+              <p className={`text-xl font-semibold ${percentageChange > 0 ? 'text-green-500' : 'text-red-500'}`}>
                 {Math.abs(percentageChange).toFixed(1)}%
               </p>
             </div>
           </div>
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[300px] w-full">
+
+        {/* Chart */}
+        <div className="h-[180px]">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={trendData}>
               <XAxis
                 dataKey="date"
-                tick={{ fill: '#666' }}
-                tickLine={{ stroke: '#666' }}
+                tick={{ fontSize: 11 }}
                 tickFormatter={formatXAxis}
                 interval="preserveStartEnd"
               />
               <YAxis
-                tick={{ fill: '#666' }}
-                tickLine={{ stroke: '#666' }}
+                tick={{ fontSize: 11 }}
                 tickFormatter={(value) => value.toLocaleString()}
               />
               <Tooltip content={<CustomTooltip />} />
-              <Legend />
               <Line
                 type="monotone"
                 dataKey="score"
                 stroke="#9b87f5"
                 strokeWidth={2}
-                dot={{ fill: '#9b87f5', r: 4 }}
-                activeDot={{ r: 6 }}
+                dot={{ fill: '#9b87f5', r: 3 }}
+                activeDot={{ r: 4 }}
                 name="Engagement Score"
               />
             </LineChart>

@@ -26,7 +26,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { LineChart } from '@/components/charts/LineChart';
+
 import { IconComponent } from '@/components/ui/IconComponent';
 
 export default function TrendDetails() {
@@ -191,7 +191,29 @@ export default function TrendDetails() {
         </p>
       </div>
 
+      {/* Grid layout for Popularity Trend and Customer Sentiments */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Popularity Trend */}
+        <TrendStats
+          trendData={trendData}
+          currentTotal={currentTotal}
+          percentageChange={percentageChange}
+          updatedAt={trend.updatedAt}
+        />
 
+        {/* Customer Sentiments */}
+        <Card className="p-4">
+          <SentimentAnalysis
+            sentiment={{
+              ...trend.sentiment,
+              trending: 'up',
+              volume: 1250
+            }}
+          />
+        </Card>
+      </div>
+
+      {/* Actionable Insights */}
       <TooltipProvider>
         <Card className="p-4 bg-gradient-to-r from-purple-50 to-blue-50">
           <div className="space-y-3">
@@ -230,17 +252,6 @@ export default function TrendDetails() {
         </Card>
       </TooltipProvider>
 
-      <TrendStats
-        trendData={trendData}
-        currentTotal={currentTotal}
-        percentageChange={percentageChange}
-        updatedAt={trend.updatedAt}
-      />
-
-      <SentimentAnalysis
-        sentiment={trend.sentiment}
-        customerQuotes={trend.customerQuotes || []}
-      />
 
       <TrendAnalyticsDashboard
         trendId={trendId || ''}

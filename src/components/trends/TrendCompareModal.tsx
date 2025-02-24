@@ -25,7 +25,7 @@ export function TrendCompareModal({ open, onOpenChange, currentTrendId }: TrendC
 
   const handleCompare = (trendId: string) => {
     onOpenChange(false);
-    navigate(`/trends/compare/${currentTrendId}/${trendId}`);
+    navigate(`/compare?trend1=${currentTrendId}&trend2=${trendId}`);
   };
 
   return (

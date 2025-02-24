@@ -1,12 +1,13 @@
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, ArrowRight, Plus, X } from "lucide-react";
-import { allTrendCategories } from '@/data/trendData';
+import { allTrendCategories, findTrendById } from '@/data/trendData';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { TrendComparison } from '@/components/trends/TrendComparison';
+import { useSearchParams } from 'react-router-dom';
 
 export interface TrendOption {
   id: string;
@@ -21,6 +22,34 @@ export default function CompareTrends() {
   const [activeTrends, setActiveTrends] = useState(2);
   const [showComparison, setShowComparison] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [searchParams] = useSearchParams();
+  const trend1Id = searchParams.get('trend1');
+  const trend2Id = searchParams.get('trend2');
+
+  useEffect(() => {
+    if (trend1Id && trend2Id) {
+      const trend1 = findTrendById(trend1Id);
+      const trend2 = findTrendById(trend2Id);
+
+      if (trend1 && trend2) {
+        // Pre-populate the comparison
+        const newTrends = [
+          {
+            id: trend1.id,
+            name: trend1.name,
+            category: trend1.category
+          },
+          {
+            id: trend2.id,
+            name: trend2.name,
+            category: trend2.category
+          }
+        ];
+        setSelectedTrends([newTrends[0], newTrends[1], null, null]);
+        setShowComparison(true);
+      }
+    }
+  }, [trend1Id, trend2Id]);
 
   const getFilteredTrends = (query: string) => {
     if (!query) return [];
