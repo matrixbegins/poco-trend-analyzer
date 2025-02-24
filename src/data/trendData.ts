@@ -114,7 +114,11 @@ const generateTrendNews = (trendName: string, category: string): NewsItem[] => [
     url: '#',
     publishedAt: new Date().toISOString(),
     category: category,
-    imageUrl: getImageUrl(category, '1')
+    imageUrl: getImageUrl(category, '1'),
+    location: 'Global',
+    views: Math.floor(1000 + Math.random() * 9000),
+    comments: Math.floor(50 + Math.random() * 150),
+    shares: Math.floor(100 + Math.random() * 300)
   },
   {
     id: '2',
@@ -123,7 +127,11 @@ const generateTrendNews = (trendName: string, category: string): NewsItem[] => [
     url: '#',
     publishedAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
     category: category,
-    imageUrl: getImageUrl(category, '2')
+    imageUrl: getImageUrl(category, '2'),
+    location: 'Global',
+    views: Math.floor(1000 + Math.random() * 9000),
+    comments: Math.floor(50 + Math.random() * 150),
+    shares: Math.floor(100 + Math.random() * 300)
   },
   {
     id: '3',
@@ -132,7 +140,11 @@ const generateTrendNews = (trendName: string, category: string): NewsItem[] => [
     url: '#',
     publishedAt: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
     category: category,
-    imageUrl: getImageUrl(category, '3')
+    imageUrl: getImageUrl(category, '3'),
+    location: 'Global',
+    views: Math.floor(1000 + Math.random() * 9000),
+    comments: Math.floor(50 + Math.random() * 150),
+    shares: Math.floor(100 + Math.random() * 300)
   }
 ];
 

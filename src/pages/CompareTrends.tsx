@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, ArrowRight, Plus, X } from "lucide-react";
-import { useNavigate } from 'react-router-dom';
 import { allTrendCategories } from '@/data/trendData';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
+import { TrendComparison } from '@/components/trends/TrendComparison';
 
-interface TrendOption {
+export interface TrendOption {
   id: string;
   name: string;
   category: string;
@@ -16,10 +16,11 @@ interface TrendOption {
 
 export default function CompareTrends() {
   usePageTitle('Compare Trends');
-  const navigate = useNavigate();
   const [searchQueries, setSearchQueries] = useState<string[]>(['', '', '', '']);
   const [selectedTrends, setSelectedTrends] = useState<(TrendOption | null)[]>([null, null, null, null]);
-  const [activeTrends, setActiveTrends] = useState(2); // Start with 2 trends
+  const [activeTrends, setActiveTrends] = useState(2);
+  const [showComparison, setShowComparison] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const getFilteredTrends = (query: string) => {
     if (!query) return [];
@@ -42,18 +43,21 @@ export default function CompareTrends() {
     }
   };
 
-  const handleCompare = () => {
+  const handleCompare = async () => {
     try {
       const validTrends = selectedTrends.filter(Boolean).slice(0, activeTrends);
       if (validTrends.length < 2) {
         toast.error('Please select at least 2 trends to compare');
         return;
       }
-      const trendIds = validTrends.map(trend => trend!.id).join('/');
-      navigate(`/trends/compare/${trendIds}`);
+      setIsProcessing(true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setShowComparison(true);
     } catch (error) {
-      console.error('Error navigating to comparison:', error);
+      console.error('Error starting comparison:', error);
       toast.error('Error starting comparison');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -83,7 +87,7 @@ export default function CompareTrends() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold">Compare Trends</h1>
         <p className="text-muted-foreground mt-2">
@@ -192,10 +196,27 @@ export default function CompareTrends() {
           disabled={selectedTrends.filter(Boolean).length < 2}
           onClick={handleCompare}
         >
-          Compare Trends
-          <ArrowRight className="h-4 w-4" />
+          {isProcessing ? (
+            <>
+              <span className="animate-spin">⏳</span>
+              Processing...
+            </>
+          ) : (
+            <>
+              Compare Trends
+              <ArrowRight className="h-4 w-4" />
+            </>
+          )}
         </Button>
       </div>
+
+      {showComparison && (
+        <div className="mt-8">
+          <TrendComparison
+            trends={selectedTrends.filter(Boolean).slice(0, activeTrends)}
+          />
+        </div>
+      )}
     </div>
   );
 }
